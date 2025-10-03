@@ -82,12 +82,7 @@ bloggios-auth:
       - google
       - facebook
     clients:
-      facebook:
-        app-id: 3418637564939739
-        app-secret: c3dbf8b3747df65c6d43c25a594d11d5
-      google:
-        client-id: 898797817545-3lnhm1esudbkd5lcvlibvvdb73t7n866.apps.googleusercontent.com
-        client-secret: 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
+
   jwt:
     key-provider:
       key-alias: ${JWT_KEY_STORE_ALIAS}
