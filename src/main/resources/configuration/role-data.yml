@@ -1,0 +1,21 @@
+roles:
+  data:
+    user:
+      id: user
+      role: user.user
+      description: Normal Role
+    admin:
+      id: admin
+      role: user.admin
+      internalRoles:
+        - user.user
+        - user.client_read
+        - user.client_write
+        - user.developer
+      description: All the access of the Application
+    doctor:
+      id: doctor
+      role: user.doctor
+      internalRoles:
+        - user.user
+      description: Has doctor access

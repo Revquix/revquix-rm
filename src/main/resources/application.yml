@@ -1,0 +1,162 @@
+server:
+  port: ${SERVER_PORT:7001}
+  shutdown: graceful
+  tomcat:
+    max-threads: 200
+    min-spare-threads: 20
+    max-connections: 10000
+    accept-count: 100
+    connection-timeout: 5000
+    max-http-form-post-size: 2MB
+    remoteip:
+      remote-ip-header: X-Forwarded-For
+      protocol-header: X-Forwarded-Proto
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/plain,text/css,application/javascript
+    min-response-size: 2048
+  error:
+    whitelabel:
+      enabled: false
+    include-stacktrace: never
+    include-message: never
+  forward-headers-strategy: framework
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+  application:
+    name: revquix-sm
+  datasource:
+    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${POSTGRES_DB:rohitparihar}
+    hikari:
+      username: ${PG_USER}
+      password: ${PG_PASSWORD}
+      maximum-pool-size: 100
+      minimum-idle: 7
+      leak-detection-threshold: 120000
+      max-lifetime: 1800000
+      idle-timeout: 600000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+      auto-commit: false
+      # Additional properties to handle network disconnection issues
+      validation-timeout: 3000
+      keepalive-time: 30000
+      initialization-fail-timeout: 1
+  jpa:
+    properties:
+      hibernate:
+        format_sql: false
+        show_sql: true
+    hibernate:
+      ddl-auto: update
+  sql:
+    init:
+      mode: always
+      schema-locations:
+        - classpath:scripts/*.sql
+
+application:
+  profile: ${ACTIVE_PROFILE:local}
+
+# CORS Configuration for production-ready security
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:2000,http://localhost:3000,https://sana-doctor-web-production.up.railway.app}
+  max-age: ${CORS_MAX_AGE:3600}
+  allow-credentials: ${CORS_ALLOW_CREDENTIALS:true}
+
+revquix:
+  otp:
+    log-enabled: true
+    forgot-otp-expiration-mins: 10
+    registration-otp-expiration-mins: 10
+    resend-otp-limit: 4
+    update-email-otp-expiration-mins: 7
+  is-mail-allowed: true
+
+bloggios-auth:
+  oauth:
+    sso-enabled: true
+    providers:
+      - google
+      - facebook
+    clients:
+      facebook:
+        app-id: 3418637564939739
+        app-secret: c3dbf8b3747df65c6d43c25a594d11d5
+      google:
+        client-id: 898797817545-3lnhm1esudbkd5lcvlibvvdb73t7n866.apps.googleusercontent.com
+        client-secret: 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
+  jwt:
+    key-provider:
+      key-alias: ${JWT_KEY_STORE_ALIAS}
+      key-store-password: ${JWT_KEY_STORE_PASSWORD}
+      key-store-path: ${JWT_KEY_STORE_PATH}
+    token-data:
+      access-token-expiry-minutes: 16
+      long-access-token-expiry-minutes: 70
+      refresh-token-cookie-name: ${REFRESH_TOKEN_COOKIE_NAME:revquix-refresh-mgmt-token}
+      refresh-token-expiry-days: 16
+      is-http-only: true
+      same-site: None
+      secure: true
+      is-remote-address-authentication: true
+  excluded-paths:
+    jwt-paths:
+      exclude-paths:
+        - /v1/auth/**
+        - /v1/user-auth/**
+        - /actuator/**
+        - /oauth2/**
+        - /v3/**
+        - /api/v1/auth/**"
+        - /v2/api-docs
+        - /swagger-resources
+        - /swagger-resources/**
+        - /configuration/ui
+        - /configuration/security
+        - /swagger-ui/**
+        - /webjars/**
+        - /swagger-ui.html
+        - /v3/api-docs
+        - /v3/api-docs/**
+      client-authentication-paths:
+        - /v1/client-auth/**
+
+authorization:
+  jwt:
+    roles-to-allow:
+      development:
+        - user.user
+#        - scope.development
+#        - user.developer
+      clientDevelopment:
+        - scope.development
+
+swagger-properties:
+  group-name:
+    definition: ${spring.application.name}
+    scan-packages: com
+  info:
+    title: Revquix SM
+    version: v1
+    description: API Documentation for revquix-sm
+    summary: The Revquix SM Application, developed with Java 17 and Spring Boot.
+    contact:
+      name: Revquix
+      email: support@revquix.com
+      url: https://www.revquix.com
+    license:
+      name: Apache 2 License
+      url: https://github.com/Revquix/revquix-sm/LICENSE
+  servers:
+    local:
+      name: Local Port
+      url: http://localhost:7001
+
+zeptomail:
+  api:
+    key: ${ZEPTOMAIL_API_KEY}
+    url: https://api.zeptomail.in/v1.1/email
+    timeout: 60

@@ -1,0 +1,30 @@
+scopes:
+  data:
+    development:
+      id: development
+      scope: scope.development
+      description: Developer with above client credentials can use the application for testing using postman or swagger
+    register:
+      id: api_register
+      scope: scope.api_register
+      description: User with the above client credentials can Register their user account or use Register User API
+    profile:
+      id: profile
+      scope: scope.profile
+      description: Scopes used to create or get the profile. Additional scopes needed to read and write
+    read:
+      id: read
+      scope: scope.read
+      description: Scopes used to read the data
+    write:
+      id: write
+      scope: scope.write
+      description: Scopes used to write the data
+    api_update_email:
+      id: api_update_email
+      scope: scope.api_update_email
+      description: Scopes used to write the data
+    update_password:
+      id: update_password
+      scope: scope.update_password
+      description: Scopes used to update password
