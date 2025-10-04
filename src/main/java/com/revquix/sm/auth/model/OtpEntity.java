@@ -29,6 +29,7 @@ package com.revquix.sm.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.revquix.sm.application.constants.ModelConstants;
+import com.revquix.sm.application.utils.ModelPayload;
 import com.revquix.sm.auth.enums.OtpFor;
 import com.revquix.sm.auth.enums.OtpStatus;
 import jakarta.persistence.*;
@@ -56,7 +57,7 @@ import java.util.UUID;
         name = ModelConstants.OTP_TABLE,
         schema = ModelConstants.AUTH_SCHEMA
 )
-public class OtpEntity {
+public class OtpEntity extends ModelPayload<OtpEntity> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

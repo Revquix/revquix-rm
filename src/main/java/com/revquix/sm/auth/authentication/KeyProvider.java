@@ -28,6 +28,7 @@
 package com.revquix.sm.auth.authentication;
 
 import com.revquix.sm.application.constants.ServiceConstants;
+import com.revquix.sm.application.exception.ErrorData;
 import com.revquix.sm.application.exception.InternalServerException;
 import com.revquix.sm.auth.properties.AuthenticationProperties;
 import lombok.RequiredArgsConstructor;
@@ -62,10 +63,8 @@ public class KeyProvider {
             return (PrivateKey) keyStore.getKey(keyProvider.getKeyAlias(), keyProvider.getKeyStorePassword().toCharArray());
         } catch (Exception exception) {
             throw new InternalServerException(
-                    exception.getMessage(),
-                    exception.getCause(),
-                    exception.getLocalizedMessage(),
-                    exception.getClass().getName()
+                    ErrorData.EXCEPTION_WHILE_FETCHING_PRIVATE_KEY,
+                    exception.getCause()
             );
         }
     }
@@ -81,10 +80,8 @@ public class KeyProvider {
             return certificate.getPublicKey();
         } catch (Exception exception) {
             throw new InternalServerException(
-                    exception.getMessage(),
-                    exception.getCause(),
-                    exception.getLocalizedMessage(),
-                    exception.getClass().getName()
+                    ErrorData.EXCEPTION_WHILE_FETCHING_PUBLIC_KEY,
+                    exception.getCause()
             );
         }
     }

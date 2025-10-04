@@ -118,7 +118,8 @@ public enum ErrorData {
     DOCTOR_CERTIFICATE_IMAGE_SIZE_EXCEEDED("1086", "Doctor certificate image size exceeded the limit"),
     FAILED_TO_GENERATE_SEQUENCE("1087", "Failed to generate the Sequence"),
     FAILED_TO_SEND_MAIL_API_ERROR("1088", "Zepto mail API error while sending the mail"),
-    ;
+    EXCEPTION_WHILE_FETCHING_PRIVATE_KEY("1089", "Exception occurred while fetching private key"),
+    EXCEPTION_WHILE_FETCHING_PUBLIC_KEY("1090", "Exception occurred while fetching public key"),;
 
     private static final String PREFIX = "SANA-ERROR-";
 

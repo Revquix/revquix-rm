@@ -64,4 +64,5 @@ public class InternalServerException extends BaseException {
         this.setLocalizedMessage(cause.getLocalizedMessage());
         this.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 }

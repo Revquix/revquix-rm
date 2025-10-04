@@ -66,15 +66,6 @@ cors:
   max-age: ${CORS_MAX_AGE:3600}
   allow-credentials: ${CORS_ALLOW_CREDENTIALS:true}
 
-revquix:
-  otp:
-    log-enabled: true
-    forgot-otp-expiration-mins: 10
-    registration-otp-expiration-mins: 10
-    resend-otp-limit: 4
-    update-email-otp-expiration-mins: 7
-  is-mail-allowed: true
-
 bloggios-auth:
   oauth:
     sso-enabled: true
@@ -161,3 +152,10 @@ zeptomail:
     key: ${ZEPTOMAIL_API_KEY}
     url: https://api.zeptomail.in/v1.1/email
     timeout: 60
+
+otp:
+  registration:
+    mail-prefix: noreply
+    log-enabled: true
+    time-expiration: 7
+    subject: Welcome to Revquix - Verify Your Email
