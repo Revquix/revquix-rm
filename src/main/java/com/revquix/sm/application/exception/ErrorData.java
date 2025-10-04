@@ -116,7 +116,9 @@ public enum ErrorData {
     DOCTOR_PROFILE_IMAGE_SIZE_EXCEEDED("1084", "Doctor profile image size exceeded the limit"),
     DOCTOR_CERTIFICATE_IMAGE_EMPTY("1085", "Doctor certificate image file is empty"),
     DOCTOR_CERTIFICATE_IMAGE_SIZE_EXCEEDED("1086", "Doctor certificate image size exceeded the limit"),
-    FAILED_TO_GENERATE_SEQUENCE("1087", "Failed to generate the Sequence");
+    FAILED_TO_GENERATE_SEQUENCE("1087", "Failed to generate the Sequence"),
+    FAILED_TO_SEND_MAIL_API_ERROR("1088", "Zepto mail API error while sending the mail"),
+    ;
 
     private static final String PREFIX = "SANA-ERROR-";
 

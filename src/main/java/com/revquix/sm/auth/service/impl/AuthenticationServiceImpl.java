@@ -25,7 +25,7 @@
  * <p>
  * For inquiries regarding licensing, please contact: support@Revquix.com.
  */
-package com.revquix.sm.auth.service.implementation;
+package com.revquix.sm.auth.service.impl;
 
 import com.revquix.sm.auth.authentication.AuthenticateHelper;
 import com.revquix.sm.auth.authentication.RevquixFacebookOAuthInitiator;
@@ -79,7 +79,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AuthenticationServiceImplementation implements AuthenticationService {
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final AuthenticateValidator authenticateValidator;
     private final AuthenticationManager authenticationManager;

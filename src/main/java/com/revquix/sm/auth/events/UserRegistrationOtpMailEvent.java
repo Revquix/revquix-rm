@@ -25,24 +25,32 @@
  * <p>
  * For inquiries regarding licensing, please contact: support@Revquix.com.
  */
-package com.revquix.sm.application.config;
+package com.revquix.sm.auth.events;
 
-/*
-  Developer: Rohit Parihar
-  Project: revquix-sm
-  GitHub: github.com/rohit-zip
-  File: RevquixBeans
+import com.revquix.sm.auth.model.UserAuth;
+import lombok.Getter;
+import org.springframework.context.ApplicationEvent;
+
+/**
+ * Developer: Rohit Parihar
+ * Project: bloggios-matching
+ * GitHub: github.com/rohit-zip
+ * File: UserRegistrationEvent.java
  */
 
-import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+/**
+ * Event triggered when a user registers and requires an OTP for verification.
+ * This event carries the UserAuth object associated with the registration.
+ */
+@Getter
+public class UserRegistrationOtpMailEvent extends ApplicationEvent {
 
-@Configuration
-public class RevquixBeans {
+    private final UserAuth userAuth;
+    private String breadcrumbId;
 
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
+    public UserRegistrationOtpMailEvent(UserAuth userAuth, String breadcrumbId) {
+        super(userAuth);
+        this.userAuth = userAuth;
+        this.breadcrumbId = breadcrumbId;
     }
 }

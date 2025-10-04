@@ -34,6 +34,7 @@ package com.revquix.sm.mail.service;
   File: ZeptoMailService
  */
 
+import com.revquix.sm.application.exception.ErrorData;
 import com.revquix.sm.application.exception.InternalServerException;
 import com.revquix.sm.mail.payload.ZeptoMailRequest;
 import com.revquix.sm.mail.payload.ZeptoMailResponse;
@@ -42,6 +43,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -65,7 +69,22 @@ public class ZeptoMailService {
     @Value("${zeptomail.api.timeout}")
     private int timeoutSeconds;
 
-    public ZeptoMailResponse sendEmail(String fromAddress, String toAddress, String toName, String subject, String htmlBody) {
+    @Retryable(
+            retryFor = {
+                    WebClientResponseException.class,
+                    java.net.ConnectException.class,
+                    java.util.concurrent.TimeoutException.class,
+                    org.springframework.web.reactive.function.client.WebClientRequestException.class
+            },
+            noRetryFor = {
+                    WebClientResponseException.BadRequest.class,
+                    WebClientResponseException.Unauthorized.class,
+                    WebClientResponseException.Forbidden.class
+            },
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 1000, multiplier = 2, maxDelay = 5000)
+    )
+    public ZeptoMailResponse sendEmail(String fromAddress, String toAddress, String subject, String htmlBody) {
         try {
             ZeptoMailRequest request = buildEmailRequest(fromAddress, toAddress, subject, htmlBody);
 
@@ -86,13 +105,12 @@ public class ZeptoMailService {
             return response;
 
         } catch (WebClientResponseException e) {
-            log.error("ZeptoMail API error - Status: {}, Body: {}", e.getStatusCode(), e.getResponseBodyAsString());
-            throw new InternalServerException(
-
-            )
+            log.warn("ZeptoMail API error - Status: {}, Body: {}, Attempt will be retried if applicable",
+                    e.getStatusCode(), e.getResponseBodyAsString());
+            throw e; // Let retry mechanism handle this
         } catch (Exception e) {
-            log.error("Failed to send email via ZeptoMail: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to send email", e);
+            log.error("Unexpected error sending email", e);
+            throw e; // Let retry mechanism handle this
         }
     }
 
@@ -108,5 +126,12 @@ public class ZeptoMailService {
                 .subject(subject)
                 .htmlBody(htmlBody)
                 .build();
+    }
+
+    @Recover
+    public ZeptoMailResponse recover(Exception e, String fromAddress, String toAddress, String subject, String htmlBody) {
+        log.error("Failed to send email after all retry attempts. From: {}, To: {}, Subject: {}",
+                fromAddress, toAddress, subject, e);
+        throw new InternalServerException(ErrorData.FAILED_TO_SEND_MAIL_API_ERROR, e);
     }
 }

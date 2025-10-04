@@ -25,37 +25,24 @@
  * <p>
  * For inquiries regarding licensing, please contact: support@Revquix.com.
  */
-package com.revquix.sm.application;
+package com.revquix.sm.application.config;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
-/**
- * Developer: Rohit Parihar
- * Project: sana-health-backend
- * GitHub: github.com/rohit-zip
- * File: SanaHealthBackendApplication.java
+/*
+  Developer: Rohit Parihar
+  Project: revquix-sm
+  GitHub: github.com/rohit-zip
+  File: RevquixBeans
  */
 
-@SpringBootApplication(
-        scanBasePackages = "com.revquix.sm"
-)
-@EnableJpaAuditing
-@EnableJpaRepositories(
-        basePackages = "com.revquix.sm"
-)
-@EntityScan(
-        basePackages = "com.revquix.sm"
-)
-@EnableFeignClients(basePackages = "com.revquix.sm")
-public class RevquixSmApplication {
+import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-    public static void main(String[] args) {
-        SpringApplication.run(RevquixSmApplication.class, args);
+@Configuration
+public class ModelMapperConfig {
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
-
 }

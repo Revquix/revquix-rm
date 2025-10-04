@@ -56,12 +56,12 @@ public class InternalServerException extends BaseException {
         this.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public InternalServerException(ErrorData) {
-        this.setErrorData(null);
-        this.setMessage(message);
-        this.setErrorCode(ServiceConstants.INTERNAL_ERROR_CODE);
+    public InternalServerException(ErrorData errorData, Throwable cause) {
+        this.setErrorData(errorData);
+        this.setMessage(errorData.getMessage());
+        this.setErrorCode(errorData.getCode());
         this.setCause(cause);
-        this.setLocalizedMessage(localizedMessage);
+        this.setLocalizedMessage(cause.getLocalizedMessage());
         this.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

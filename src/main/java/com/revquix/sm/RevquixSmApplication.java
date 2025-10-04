@@ -25,30 +25,38 @@
  * <p>
  * For inquiries regarding licensing, please contact: support@Revquix.com.
  */
-package com.revquix.sm.auth.events;
+package com.revquix.sm;
 
-import com.revquix.sm.auth.model.UserAuth;
-import lombok.Getter;
-import org.springframework.context.ApplicationEvent;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * Developer: Rohit Parihar
- * Project: bloggios-matching
+ * Project: sana-health-backend
  * GitHub: github.com/rohit-zip
- * File: UserRegistrationEvent.java
+ * File: SanaHealthBackendApplication.java
  */
 
-/**
- * Event triggered when a user registers and requires an OTP for verification.
- * This event carries the UserAuth object associated with the registration.
- */
-@Getter
-public class UserRegistrationOtpEvent extends ApplicationEvent {
+@SpringBootApplication
+@EnableJpaAuditing
+@EnableJpaRepositories(
+        basePackages = "com.revquix.sm"
+)
+@EntityScan(
+        basePackages = "com.revquix.sm"
+)
+@EnableFeignClients(basePackages = "com.revquix.sm")
+@EnableRetry
+public class RevquixSmApplication {
 
-    private final UserAuth userAuth;
-
-    public UserRegistrationOtpEvent(UserAuth userAuth) {
-        super(userAuth);
-        this.userAuth = userAuth;
+    public static void main(String[] args) {
+        SpringApplication.run(RevquixSmApplication.class, args);
     }
+
 }

@@ -25,7 +25,7 @@
  * <p>
  * For inquiries regarding licensing, please contact: support@Revquix.com.
  */
-package com.revquix.sm.auth.service.implementation;
+package com.revquix.sm.auth.service.impl;
 
 /*
   Developer: Rohit Parihar
@@ -34,6 +34,8 @@ package com.revquix.sm.auth.service.implementation;
   File: UserAuthServiceImplementation
  */
 
+import com.revquix.sm.application.constants.ServiceConstants;
+import com.revquix.sm.application.utils.MdcProvider;
 import com.revquix.sm.auth.repository.OtpEntityRepository;
 import com.revquix.sm.auth.repository.RoleRepository;
 import com.revquix.sm.auth.repository.UserAuthRepository;
@@ -54,6 +56,7 @@ import com.revquix.sm.auth.guardrails.RegisterUserValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -72,7 +75,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserAuthServiceImplementation implements UserAuthService {
+public class UserAuthServiceImpl implements UserAuthService {
 
     private final RegisterUserValidator registerUserValidator;
     private final UserAuthRepository userAuthRepository;
@@ -93,6 +96,7 @@ public class UserAuthServiceImplementation implements UserAuthService {
     @Override
     @Transactional
     public ResponseEntity<ModuleResponse> registerUser(RegisterRequest registerRequest) {
+        log.info("UserAuthServiceImpl::registerUser -> Register Request : {}", registerRequest.getEmail());
         registerUserValidator.validate(registerRequest);
         Optional<UserAuth> userAuthOptional = userAuthRepository.findByEmail(registerRequest.getEmail().toLowerCase());
         if (userAuthOptional.isPresent()) {
@@ -106,12 +110,12 @@ public class UserAuthServiceImplementation implements UserAuthService {
         }
         UserAuth userAuth = registerRequestToUserAuthTransformer.transform(registerRequest);
         UserAuth userAuthResponse = userAuthRepository.save(userAuth);
-        log.info("User Auth saved to Database : {}", userAuthResponse.toString());
-        applicationEventPublisher.publishEvent(new UserRegistrationOtpEvent(userAuthResponse));
+        log.info("UserAuthServiceImpl::registerUser -> User Auth saved to Database : {}", userAuthResponse.toJson());
+        applicationEventPublisher.publishEvent(new UserRegistrationOtpMailEvent(userAuthResponse, MdcProvider.getBreadcrumbId()));
         return ResponseEntity.ok(ModuleResponse
                 .builder()
-                .message("User Registered Successfully")
-                .userId(userAuthResponse.getUserId().toString())
+                .message("User registered successfully. Please verify OTP sent to your email to enable your account")
+                .userId(userAuthResponse.getUserId())
                 .build());
     }
 

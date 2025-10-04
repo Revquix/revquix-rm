@@ -82,6 +82,12 @@ bloggios-auth:
       - google
       - facebook
     clients:
+      facebook:
+        app-id: ${FACEBOOK_APP_ID}
+        app-secret: ${FACEBOOK_APP_SECRET}
+      google:
+        client-id: ${GOOGLE_CLIENT_ID}
+        client-secret: ${GOOGLE_CLIENT_SECRET}
 
   jwt:
     key-provider:
