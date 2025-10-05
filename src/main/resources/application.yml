@@ -56,6 +56,21 @@ spring:
       mode: always
       schema-locations:
         - classpath:scripts/*.sql
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:redis123}
+      username: ${REDIS_USERNAME:default}
+      database: 0
+      connect-timeout: 2000ms
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 50
+          max-idle: 10
+          min-idle: 5
+          max-wait: 2000ms
 
 application:
   profile: ${ACTIVE_PROFILE:local}
