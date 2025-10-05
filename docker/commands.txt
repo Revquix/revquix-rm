@@ -1,0 +1,5 @@
+Start Redis Docker
+docker-compose -f docker-compose-redis.yml up -d
+
+Stop Redis Docker
+docker-compose -f docker-compose-redis.yml down
